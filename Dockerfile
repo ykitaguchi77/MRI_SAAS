@@ -12,6 +12,7 @@ FROM python:3.11-slim
 # System dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0 \
+    libxcb1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user (HF Spaces requirement)
