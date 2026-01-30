@@ -91,22 +91,16 @@ app.add_middleware(
 app.include_router(api_router, prefix=settings.API_V1_PREFIX)
 
 
-@app.get("/")
-async def root():
-    """Root endpoint"""
-    return {
-        "name": "MRI Segmentation API",
-        "version": "1.0.0",
-        "docs_url": "/docs",
-        "health_check": f"{settings.API_V1_PREFIX}/health"
-    }
-
-
 # Serve frontend static files (for production deployment)
 static_dir = Path(__file__).parent.parent / "static"
-if static_dir.exists():
+if static_dir.exists() and (static_dir / "index.html").exists():
     # Serve static assets (JS, CSS, images)
     app.mount("/assets", StaticFiles(directory=str(static_dir / "assets")), name="static-assets")
+
+    @app.get("/")
+    async def serve_index():
+        """Serve frontend index.html"""
+        return FileResponse(str(static_dir / "index.html"))
 
     @app.get("/{full_path:path}")
     async def serve_frontend(full_path: str):
@@ -115,6 +109,16 @@ if static_dir.exists():
         if file_path.is_file():
             return FileResponse(str(file_path))
         return FileResponse(str(static_dir / "index.html"))
+else:
+    @app.get("/")
+    async def root():
+        """Root endpoint (API only, no frontend)"""
+        return {
+            "name": "MRI Segmentation API",
+            "version": "1.0.0",
+            "docs_url": "/docs",
+            "health_check": f"{settings.API_V1_PREFIX}/health"
+        }
 
 
 if __name__ == "__main__":
