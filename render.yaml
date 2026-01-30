@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: mri-saas
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    envVars:
+      - key: MRI_SAAS_DEVICE
+        value: cpu

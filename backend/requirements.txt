@@ -1,0 +1,19 @@
+# FastAPI and server
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+python-multipart>=0.0.6
+
+# Pydantic
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# PyTorch (CPU version - use appropriate version for your system)
+torch>=2.0.0
+
+# Image processing
+numpy>=1.24.0
+opencv-python-headless>=4.8.0
+pillow>=10.0.0
+
+# Medical imaging
+nibabel>=5.0.0

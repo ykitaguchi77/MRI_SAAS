@@ -1,0 +1,128 @@
+.results-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.results-panel h3 {
+  color: #2c3e50;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.results-panel h4 {
+  color: #7f8c8d;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.results-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-item .label {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.summary-item .value {
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.statistics-table {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.statistics-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.statistics-table th,
+.statistics-table td {
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.statistics-table th {
+  background: #f8f9fa;
+  color: #7f8c8d;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.statistics-table td {
+  border-bottom: 1px solid #ecf0f1;
+  color: #2c3e50;
+}
+
+.statistics-table tr:last-child td {
+  border-bottom: none;
+}
+
+.color-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.download-section {
+  padding-top: 0.5rem;
+  border-top: 1px solid #ecf0f1;
+}
+
+.download-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.download-buttons button {
+  flex: 1;
+  padding: 0.6rem;
+  border: 1px solid #3498db;
+  border-radius: 6px;
+  background: white;
+  color: #3498db;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.download-buttons button:hover:not(:disabled) {
+  background: #3498db;
+  color: white;
+}
+
+.download-buttons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

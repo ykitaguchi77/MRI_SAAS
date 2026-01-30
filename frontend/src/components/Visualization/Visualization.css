@@ -1,0 +1,256 @@
+.image-viewer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.view-label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  z-index: 10;
+}
+
+.image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  position: relative;
+  min-height: 0;
+}
+
+.display-image {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-overlay .spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Slice Slider */
+.slice-slider {
+  background: #2c3e50;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.slice-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.slice-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  background: #3498db;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.slice-btn:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.slice-btn:disabled {
+  background: #5d6d7e;
+  cursor: not-allowed;
+}
+
+.slice-range {
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #5d6d7e;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.slice-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #3498db;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slice-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #bdc3c7;
+  font-size: 0.9rem;
+}
+
+.slice-input {
+  width: 50px;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #5d6d7e;
+  border-radius: 4px;
+  background: #34495e;
+  color: white;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Overlay Controls */
+.overlay-controls {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.overlay-controls h3 {
+  margin-bottom: 1rem;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.view-mode-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-mode-buttons button {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #bdc3c7;
+  border-radius: 6px;
+  background: white;
+  color: #7f8c8d;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+}
+
+.view-mode-buttons button:hover {
+  border-color: #3498db;
+  color: #3498db;
+}
+
+.view-mode-buttons button.active {
+  background: #3498db;
+  border-color: #3498db;
+  color: white;
+}
+
+.alpha-control {
+  margin-top: 1rem;
+}
+
+.alpha-control label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+.alpha-control input[type="range"] {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #ecf0f1;
+  border-radius: 3px;
+}
+
+.alpha-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #3498db;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Color Legend */
+.color-legend {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.color-legend h3 {
+  margin-bottom: 1rem;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.legend-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.color-box {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.class-name {
+  flex: 1;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.class-name .full-name {
+  display: block;
+  font-size: 0.75rem;
+  color: #95a5a6;
+  font-weight: 400;
+}
+
+.percentage {
+  color: #7f8c8d;
+  font-size: 0.8rem;
+}
