@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
+# Create non-root user (HF Spaces requirement)
+RUN useradd -m -u 1000 user
+
 # Install PyTorch CPU (separate layer for caching)
 RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 
@@ -21,24 +24,27 @@ RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/wh
 COPY backend/requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
-# Set working directory (backend expects to run from here)
-WORKDIR /app/backend
+# Switch to non-root user
+USER user
+ENV HOME=/home/user
+WORKDIR $HOME/app
 
 # Copy backend code
-COPY backend/app ./app
-COPY backend/checkpoints ./checkpoints
-COPY backend/samples ./samples
+COPY --chown=user backend/app ./app
+COPY --chown=user backend/checkpoints ./checkpoints
+COPY --chown=user backend/samples ./samples
 
 # Copy frontend build output
-COPY --from=frontend-builder /app/frontend/dist ./static
+COPY --from=frontend-builder --chown=user /app/frontend/dist ./static
 
 # Create temp directory
 RUN mkdir -p ./temp
 
 # Environment
 ENV MRI_SAAS_DEVICE=cpu
-ENV PORT=10000
+ENV MRI_SAAS_TEMP_DIR=/home/user/app/temp
+ENV MRI_SAAS_MODEL_PATH=/home/user/app/checkpoints/final_model.pth
 
-EXPOSE 10000
+EXPOSE 7860
 
-CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "7860"]
