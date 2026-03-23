@@ -17,6 +17,13 @@ export interface ClassStatistics {
   pixel_count: number;
   percentage: number;
   color: number[];
+  volume_mm3?: number;
+  volume_cm3?: number;
+}
+
+export interface LRStatistics {
+  left: ClassStatistics[];
+  right: ClassStatistics[];
 }
 
 export interface SegmentationResponse {
@@ -24,6 +31,7 @@ export interface SegmentationResponse {
   num_slices_processed: number;
   statistics: ClassStatistics[];
   processing_time_ms: number;
+  lr_statistics?: LRStatistics;
 }
 
 export interface SliceData {
@@ -32,6 +40,7 @@ export interface SliceData {
   overlay_image: string;
   slice_index: number;
   statistics: ClassStatistics[];
+  lr_statistics?: LRStatistics;
 }
 
 export interface ResultsResponse {

@@ -9,7 +9,7 @@ import numpy as np
 from app.config import settings
 from app.core.model_loader import get_model_manager
 from app.core.preprocessing import preprocess_image, preprocess_volume, postprocess_predictions
-from app.core.inference import predict_single, predict_volume, get_prediction_statistics
+from app.core.inference import predict_single, predict_volume, get_prediction_statistics, get_lr_statistics, extract_voxel_dims
 from app.services.file_handler import get_file_handler
 from app.services.visualization import (
     create_colored_mask,
@@ -23,6 +23,7 @@ from app.schemas import (
     ResultsResponse,
     SliceData,
     ClassStatistics,
+    LRStatistics,
 )
 
 router = APIRouter()
@@ -103,14 +104,30 @@ async def run_segmentation(session_id: str):
     # Save results
     file_handler.save_results(session_id, predictions, data, metadata)
 
+    # Calculate voxel dimensions and scale factors for volume calculation
+    voxel_dims = extract_voxel_dims(metadata)
+    scale_factors = None
+    if voxel_dims is not None and file_type == "nifti":
+        # Predictions are at display_size (512), but voxel dims are for original resolution
+        orig_h, orig_w = original_shape[0], original_shape[1]
+        scale_factors = (orig_h / display_size, orig_w / display_size)
+
     # Calculate statistics
-    statistics = get_prediction_statistics(predictions)
+    statistics = get_prediction_statistics(predictions, voxel_dims, scale_factors)
+
+    # Calculate left/right statistics
+    lr_raw = get_lr_statistics(predictions, voxel_dims, scale_factors)
+    lr_statistics = LRStatistics(
+        left=[ClassStatistics(**s) for s in lr_raw["left"]],
+        right=[ClassStatistics(**s) for s in lr_raw["right"]]
+    )
 
     return SegmentationResponse(
         session_id=session_id,
         num_slices_processed=num_slices,
         statistics=[ClassStatistics(**s) for s in statistics],
-        processing_time_ms=round(processing_time, 2)
+        processing_time_ms=round(processing_time, 2),
+        lr_statistics=lr_statistics
     )
 
 
@@ -169,15 +186,32 @@ async def get_results(
     colored_mask = create_colored_mask(pred_slice)
     mask_b64 = encode_image_base64(colored_mask)
 
+    # Calculate voxel dimensions and scale factors
+    voxel_dims = extract_voxel_dims(metadata)
+    scale_factors = None
+    if voxel_dims is not None and file_type == "nifti":
+        # Need original dimensions to compute scale factors
+        orig_dims = metadata.get("dimensions", [])
+        if len(orig_dims) >= 2:
+            scale_factors = (orig_dims[0] / predictions.shape[0], orig_dims[1] / predictions.shape[1])
+
     # Calculate slice statistics
-    statistics = get_prediction_statistics(pred_slice)
+    statistics = get_prediction_statistics(pred_slice, voxel_dims, scale_factors)
+
+    # Calculate left/right statistics for this slice
+    lr_raw = get_lr_statistics(pred_slice, voxel_dims, scale_factors)
+    lr_statistics = LRStatistics(
+        left=[ClassStatistics(**s) for s in lr_raw["left"]],
+        right=[ClassStatistics(**s) for s in lr_raw["right"]]
+    )
 
     slice_data = SliceData(
         original_image=original_b64,
         segmentation_mask=mask_b64,
         overlay_image=overlay_b64,
         slice_index=slice_index,
-        statistics=[ClassStatistics(**s) for s in statistics]
+        statistics=[ClassStatistics(**s) for s in statistics],
+        lr_statistics=lr_statistics
     )
 
     return ResultsResponse(
@@ -191,7 +225,7 @@ async def get_results(
 @router.get("/results/{session_id}/download")
 async def download_results(
     session_id: str,
-    format: str = Query("nifti", pattern="^(nifti|png)$")
+    format: str = Query("nifti", pattern="^(nifti|png|excel)$")
 ):
     """
     Download segmentation results.
@@ -231,6 +265,25 @@ async def download_results(
             content=buffer.read(),
             media_type="application/gzip",
             headers={"Content-Disposition": f"attachment; filename=segmentation_{session_id}.nii.gz"}
+        )
+
+    elif format == "excel":
+        # Return Excel report
+        from app.services.excel_export import create_excel_report
+
+        voxel_dims = extract_voxel_dims(metadata)
+        scale_factors = None
+        if voxel_dims is not None:
+            orig_dims = metadata.get("dimensions", [])
+            if len(orig_dims) >= 2:
+                scale_factors = (orig_dims[0] / predictions.shape[0], orig_dims[1] / predictions.shape[1])
+
+        buffer = create_excel_report(predictions, metadata, voxel_dims, scale_factors)
+
+        return Response(
+            content=buffer.read(),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": f"attachment; filename=analysis_{session_id}.xlsx"}
         )
 
     else:  # png

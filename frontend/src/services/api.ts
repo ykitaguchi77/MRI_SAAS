@@ -83,7 +83,7 @@ export async function getClasses(): Promise<ClassInfo[]> {
 
 export async function downloadResults(
   sessionId: string,
-  format: 'nifti' | 'png' = 'nifti'
+  format: 'nifti' | 'png' | 'excel' = 'nifti'
 ): Promise<Blob> {
   const response = await fetch(`${API_BASE}/results/${sessionId}/download?format=${format}`);
 

@@ -26,6 +26,14 @@ class ClassStatistics(BaseModel):
     pixel_count: int
     percentage: float
     color: List[int]
+    volume_mm3: Optional[float] = None
+    volume_cm3: Optional[float] = None
+
+
+class LRStatistics(BaseModel):
+    """Left/Right split statistics"""
+    left: List[ClassStatistics]
+    right: List[ClassStatistics]
 
 
 class SegmentationResponse(BaseModel):
@@ -34,6 +42,7 @@ class SegmentationResponse(BaseModel):
     num_slices_processed: int
     statistics: List[ClassStatistics]
     processing_time_ms: float
+    lr_statistics: Optional[LRStatistics] = None
 
 
 class SliceData(BaseModel):
@@ -43,6 +52,7 @@ class SliceData(BaseModel):
     overlay_image: str       # Base64 encoded PNG
     slice_index: int
     statistics: List[ClassStatistics]
+    lr_statistics: Optional[LRStatistics] = None
 
 
 class ResultsResponse(BaseModel):

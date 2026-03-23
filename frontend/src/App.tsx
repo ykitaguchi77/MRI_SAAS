@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { FileInfo, SliceData, ClassStatistics } from './types';
+import type { FileInfo, SliceData, ClassStatistics, LRStatistics } from './types';
 import { uploadFile, loadSample, runSegmentation, getResults, checkHealth } from './services/api';
 import FileUpload from './components/FileUpload/FileUpload';
 import ImageViewer from './components/Visualization/ImageViewer';
@@ -24,6 +24,7 @@ function App() {
 
   const [sliceData, setSliceData] = useState<SliceData | null>(null);
   const [overallStats, setOverallStats] = useState<ClassStatistics[]>([]);
+  const [overallLRStats, setOverallLRStats] = useState<LRStatistics | undefined>(undefined);
   const [processingTime, setProcessingTime] = useState<number | null>(null);
 
   const [error, setError] = useState<string | null>(null);
@@ -101,6 +102,7 @@ function App() {
     try {
       const response = await runSegmentation(sessionId);
       setOverallStats(response.statistics);
+      setOverallLRStats(response.lr_statistics);
       setProcessingTime(response.processing_time_ms);
 
       // Load initial results
@@ -117,6 +119,7 @@ function App() {
     setFileInfo(null);
     setSliceData(null);
     setOverallStats([]);
+    setOverallLRStats(undefined);
     setProcessingTime(null);
     setCurrentSlice(0);
     setTotalSlices(1);
@@ -220,9 +223,10 @@ function App() {
               <div className="workspace-right">
                 <ResultsPanel
                   sessionId={sessionId}
-                  statistics={overallStats}
+                  statistics={sliceData?.statistics || overallStats}
                   processingTime={processingTime}
                   fileType={fileInfo?.file_type || 'image'}
+                  lrStatistics={sliceData?.lr_statistics || overallLRStats}
                 />
               </div>
             )}

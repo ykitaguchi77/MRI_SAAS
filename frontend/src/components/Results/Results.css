@@ -95,6 +95,57 @@
   vertical-align: middle;
 }
 
+.stats-view-toggle {
+  display: flex;
+  gap: 0;
+  border: 1px solid #3498db;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.stats-view-toggle button {
+  flex: 1;
+  padding: 0.4rem 0.75rem;
+  border: none;
+  background: white;
+  color: #3498db;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.stats-view-toggle button.active {
+  background: #3498db;
+  color: white;
+}
+
+.stats-view-toggle button:hover:not(.active):not(:disabled) {
+  background: #ebf5fb;
+}
+
+.stats-view-toggle button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.lr-note {
+  color: #95a5a6;
+  font-size: 0.75rem;
+  font-style: italic;
+  margin: 0.5rem 0 0 0;
+}
+
+.excel-button {
+  border-color: #27ae60 !important;
+  color: #27ae60 !important;
+}
+
+.excel-button:hover:not(:disabled) {
+  background: #27ae60 !important;
+  color: white !important;
+}
+
 .download-section {
   padding-top: 0.5rem;
   border-top: 1px solid #ecf0f1;
