@@ -42,6 +42,11 @@ def generate_meshes(
     if len(predictions.shape) != 3:
         raise ValueError("3D mesh generation requires a 3D volume")
 
+    # Rotate 90 degrees left to undo the preprocessing rotation (rot90 k=-1)
+    # Predictions were built from images rotated right by 90 degrees,
+    # so we rotate left to restore the original NIfTI orientation for 3D
+    predictions = np.rot90(predictions, k=1, axes=(0, 1))
+
     # Get voxel dimensions from affine
     voxel_dims = extract_voxel_dims(metadata)
     if voxel_dims is not None:
