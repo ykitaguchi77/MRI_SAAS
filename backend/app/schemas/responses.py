@@ -71,6 +71,24 @@ class HealthResponse(BaseModel):
     device: str
 
 
+class MeshClassData(BaseModel):
+    """Mesh data for a single segmentation class"""
+    class_id: int
+    class_name: str
+    color: str  # hex color "#ff0000"
+    vertices: List[float]  # flat [x,y,z,...]
+    faces: List[int]  # flat [i,j,k,...]
+    vertex_count: int
+    face_count: int
+
+
+class Mesh3DResponse(BaseModel):
+    """Response for 3D mesh generation"""
+    session_id: str
+    classes: List[MeshClassData]
+    bounds: List[float]  # [minX, minY, minZ, maxX, maxY, maxZ]
+
+
 class ErrorResponse(BaseModel):
     """Error response"""
     error: str

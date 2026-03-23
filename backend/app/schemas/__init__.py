@@ -8,6 +8,8 @@ from .responses import (
     ResultsResponse,
     HealthResponse,
     ErrorResponse,
+    MeshClassData,
+    Mesh3DResponse,
 )
 
 __all__ = [
@@ -20,4 +22,6 @@ __all__ = [
     'ResultsResponse',
     'HealthResponse',
     'ErrorResponse',
+    'MeshClassData',
+    'Mesh3DResponse',
 ]

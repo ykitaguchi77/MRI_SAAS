@@ -6,6 +6,7 @@ import ImageViewer from './components/Visualization/ImageViewer';
 import SliceSlider from './components/Visualization/SliceSlider';
 import OverlayControls from './components/Visualization/OverlayControls';
 import ColorLegend from './components/Visualization/ColorLegend';
+import Viewer3D from './components/Visualization/Viewer3D';
 import ResultsPanel from './components/Results/ResultsPanel';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import './App.css';
@@ -26,6 +27,8 @@ function App() {
   const [overallStats, setOverallStats] = useState<ClassStatistics[]>([]);
   const [overallLRStats, setOverallLRStats] = useState<LRStatistics | undefined>(undefined);
   const [processingTime, setProcessingTime] = useState<number | null>(null);
+
+  const [show3D, setShow3D] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
   const [apiStatus, setApiStatus] = useState<'checking' | 'online' | 'offline'>('checking');
@@ -123,6 +126,7 @@ function App() {
     setProcessingTime(null);
     setCurrentSlice(0);
     setTotalSlices(1);
+    setShow3D(false);
     setError(null);
   };
 
@@ -175,7 +179,7 @@ function App() {
                 </button>
               </div>
 
-              {hasResults && (
+              {hasResults && !show3D && (
                 <>
                   <OverlayControls
                     viewMode={viewMode}
@@ -183,6 +187,14 @@ function App() {
                     overlayAlpha={overlayAlpha}
                     onAlphaChange={setOverlayAlpha}
                   />
+                  {fileInfo?.file_type === 'nifti' && (
+                    <button
+                      className="view3d-button"
+                      onClick={() => setShow3D(true)}
+                    >
+                      3D View
+                    </button>
+                  )}
                   <ColorLegend statistics={sliceData?.statistics || []} />
                 </>
               )}
@@ -194,6 +206,11 @@ function App() {
                   <LoadingSpinner />
                   <p>Running segmentation...</p>
                 </div>
+              ) : show3D && sessionId ? (
+                <Viewer3D
+                  sessionId={sessionId}
+                  onClose={() => setShow3D(false)}
+                />
               ) : hasResults && sliceData ? (
                 <>
                   <ImageViewer

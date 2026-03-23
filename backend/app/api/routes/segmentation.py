@@ -24,6 +24,8 @@ from app.schemas import (
     SliceData,
     ClassStatistics,
     LRStatistics,
+    Mesh3DResponse,
+    MeshClassData,
 )
 
 router = APIRouter()
@@ -308,6 +310,52 @@ async def download_results(
             media_type="image/png",
             headers={"Content-Disposition": f"attachment; filename=segmentation_{session_id}.png"}
         )
+
+
+@router.get("/results/{session_id}/mesh3d", response_model=Mesh3DResponse)
+async def get_mesh3d(session_id: str):
+    """
+    Generate 3D mesh data from segmentation results.
+    Only available for NIfTI (3D) volumes.
+    """
+    file_handler = get_file_handler()
+
+    if not file_handler.has_results(session_id):
+        raise HTTPException(status_code=404, detail="Results not found. Run segmentation first.")
+
+    # Check for cached meshes
+    from app.services.mesh_generator import get_cached_meshes, save_mesh_cache, generate_meshes
+
+    session_dir = file_handler.get_session_dir(session_id)
+    cached = get_cached_meshes(session_dir)
+    if cached:
+        cached["session_id"] = session_id
+        return Mesh3DResponse(**cached)
+
+    # Load results
+    try:
+        predictions, _, metadata = file_handler.load_results(session_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to load results: {str(e)}")
+
+    # Verify 3D volume
+    if len(predictions.shape) != 3:
+        raise HTTPException(status_code=400, detail="3D visualization is only available for NIfTI volumes")
+
+    # Generate meshes
+    try:
+        mesh_data = generate_meshes(predictions, metadata)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Mesh generation failed: {str(e)}")
+
+    if not mesh_data["classes"]:
+        raise HTTPException(status_code=404, detail="No structures detected for 3D rendering")
+
+    # Cache the result
+    save_mesh_cache(session_dir, mesh_data)
+
+    mesh_data["session_id"] = session_id
+    return Mesh3DResponse(**mesh_data)
 
 
 @router.get("/classes")

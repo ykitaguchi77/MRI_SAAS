@@ -3,6 +3,7 @@ import type {
   SegmentationResponse,
   ResultsResponse,
   ClassInfo,
+  Mesh3DResponse,
 } from '../types';
 
 const API_BASE = '/api/v1';
@@ -92,6 +93,17 @@ export async function downloadResults(
   }
 
   return response.blob();
+}
+
+export async function getMesh3D(sessionId: string): Promise<Mesh3DResponse> {
+  const response = await fetch(`${API_BASE}/results/${sessionId}/mesh3d`);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail || 'Failed to load 3D mesh');
+  }
+
+  return response.json();
 }
 
 export async function deleteSession(sessionId: string): Promise<void> {

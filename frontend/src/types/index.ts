@@ -58,4 +58,20 @@ export interface ClassInfo {
   hex_color: string;
 }
 
+export interface MeshClassData {
+  class_id: number;
+  class_name: string;
+  color: string;
+  vertices: number[];
+  faces: number[];
+  vertex_count: number;
+  face_count: number;
+}
+
+export interface Mesh3DResponse {
+  session_id: string;
+  classes: MeshClassData[];
+  bounds: number[];
+}
+
 export type ViewMode = 'original' | 'mask' | 'overlay' | 'side-by-side';

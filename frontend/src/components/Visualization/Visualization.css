@@ -254,3 +254,167 @@
   color: #7f8c8d;
   font-size: 0.8rem;
 }
+
+/* 3D Viewer */
+.viewer3d-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #1a1a2e;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.viewer3d-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: rgba(44, 62, 80, 0.9);
+}
+
+.viewer3d-header h3 {
+  color: white;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.viewer3d-close {
+  padding: 0.4rem 1rem;
+  border: 1px solid #3498db;
+  border-radius: 6px;
+  background: transparent;
+  color: #3498db;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.viewer3d-close:hover {
+  background: #3498db;
+  color: white;
+}
+
+.viewer3d-content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.viewer3d-canvas-wrapper {
+  flex: 1;
+  position: relative;
+  min-height: 400px;
+}
+
+.viewer3d-loading,
+.viewer3d-error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #bdc3c7;
+  gap: 1rem;
+}
+
+.viewer3d-error button {
+  padding: 0.5rem 1.5rem;
+  border: 1px solid #3498db;
+  border-radius: 6px;
+  background: transparent;
+  color: #3498db;
+  cursor: pointer;
+}
+
+/* Class Toggle 3D */
+.class-toggle-3d {
+  width: 200px;
+  padding: 1rem;
+  background: rgba(44, 62, 80, 0.6);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.class-toggle-3d h4 {
+  color: #ecf0f1;
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+}
+
+.toggle-buttons-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 0.3rem;
+  border: 1px solid #5d6d7e;
+  border-radius: 4px;
+  background: transparent;
+  color: #bdc3c7;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toggle-btn:hover {
+  border-color: #3498db;
+  color: #3498db;
+}
+
+.toggle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #ecf0f1;
+}
+
+.toggle-item input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: #3498db;
+}
+
+.toggle-color {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.toggle-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 3D View Button */
+.view3d-button {
+  margin-top: 0.75rem;
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #9b59b6;
+  border-radius: 6px;
+  background: transparent;
+  color: #9b59b6;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view3d-button:hover {
+  background: #9b59b6;
+  color: white;
+}
