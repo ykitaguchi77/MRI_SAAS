@@ -40,7 +40,7 @@ function App() {
       .catch(() => setApiStatus('offline'));
   }, []);
 
-  // Load results when slice changes
+  // Load results when slice or alpha changes
   const loadSliceResults = useCallback(async (slice: number, alpha: number) => {
     if (!sessionId) return;
 
@@ -58,7 +58,11 @@ function App() {
 
   useEffect(() => {
     if (sessionId && overallStats.length > 0) {
-      loadSliceResults(currentSlice, overlayAlpha);
+      // Use a small debounce to avoid rapid-fire requests during slider drag
+      const timer = setTimeout(() => {
+        loadSliceResults(currentSlice, overlayAlpha);
+      }, 50);
+      return () => clearTimeout(timer);
     }
   }, [currentSlice, overlayAlpha, sessionId, overallStats.length, loadSliceResults]);
 

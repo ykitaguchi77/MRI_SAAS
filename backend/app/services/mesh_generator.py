@@ -48,8 +48,9 @@ def generate_meshes(
     if len(predictions.shape) != 3:
         raise ValueError("3D mesh generation requires a 3D volume")
 
-    # Rotate to undo the preprocessing rotation and fix orientation for 3D
-    predictions = np.rot90(predictions, k=-1, axes=(0, 1))
+    # Undo preprocessing rotation and flip to correct 3D orientation
+    predictions = np.rot90(predictions, k=1, axes=(0, 1))
+    predictions = np.flipud(predictions)
 
     # Get voxel dimensions from affine
     voxel_dims = extract_voxel_dims(metadata)
