@@ -15,6 +15,12 @@ from app.core.inference import extract_voxel_dims
 logger = logging.getLogger(__name__)
 
 
+# Override colors for better 3D visibility
+_3D_COLOR_OVERRIDES = {
+    9: [192, 192, 210],  # Eyeball - brighter silver-blue instead of dark gray
+}
+
+
 def _rgb_to_hex(rgb: list) -> str:
     return "#{:02x}{:02x}{:02x}".format(*rgb)
 
@@ -42,10 +48,8 @@ def generate_meshes(
     if len(predictions.shape) != 3:
         raise ValueError("3D mesh generation requires a 3D volume")
 
-    # Rotate 90 degrees left to undo the preprocessing rotation (rot90 k=-1)
-    # Predictions were built from images rotated right by 90 degrees,
-    # so we rotate left to restore the original NIfTI orientation for 3D
-    predictions = np.rot90(predictions, k=1, axes=(0, 1))
+    # Rotate to undo the preprocessing rotation and fix orientation for 3D
+    predictions = np.rot90(predictions, k=-1, axes=(0, 1))
 
     # Get voxel dimensions from affine
     voxel_dims = extract_voxel_dims(metadata)
@@ -128,7 +132,7 @@ def generate_meshes(
         mesh_classes.append({
             "class_id": class_id,
             "class_name": CLASS_FULL_NAMES.get(class_id, CLASS_NAMES.get(class_id, f"Class {class_id}")),
-            "color": _rgb_to_hex(CLASS_COLORS.get(class_id, [128, 128, 128])),
+            "color": _rgb_to_hex(_3D_COLOR_OVERRIDES.get(class_id, CLASS_COLORS.get(class_id, [128, 128, 128]))),
             "vertices": verts_physical.flatten().tolist(),
             "faces": faces.flatten().tolist(),
             "vertex_count": len(verts_physical),

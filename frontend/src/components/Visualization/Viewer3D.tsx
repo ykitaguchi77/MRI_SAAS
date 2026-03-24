@@ -108,7 +108,8 @@ function Viewer3D({ sessionId, onClose }: Viewer3DProps) {
           ) : meshData && meshData.classes.length > 0 ? (
             <Canvas
               camera={{
-                position: [0, 0, getCameraDistance()],
+                position: [0, 0, -getCameraDistance()],
+                up: [0, -1, 0],
                 fov: 50,
                 near: 0.1,
                 far: 10000,
