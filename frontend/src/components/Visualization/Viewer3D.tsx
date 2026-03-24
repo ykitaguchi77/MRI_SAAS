@@ -109,7 +109,7 @@ function Viewer3D({ sessionId, onClose }: Viewer3DProps) {
             <Canvas
               camera={{
                 position: [0, 0, -getCameraDistance()],
-                up: [0, -1, 0],
+                up: [0, 1, 0],
                 fov: 50,
                 near: 0.1,
                 far: 10000,
