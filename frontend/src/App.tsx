@@ -186,15 +186,9 @@ function App() {
                     onViewModeChange={setViewMode}
                     overlayAlpha={overlayAlpha}
                     onAlphaChange={setOverlayAlpha}
+                    show3DButton={fileInfo?.file_type === 'nifti'}
+                    on3DClick={() => setShow3D(true)}
                   />
-                  {fileInfo?.file_type === 'nifti' && (
-                    <button
-                      className="view3d-button"
-                      onClick={() => setShow3D(true)}
-                    >
-                      3D View
-                    </button>
-                  )}
                   <ColorLegend statistics={sliceData?.statistics || []} />
                 </>
               )}

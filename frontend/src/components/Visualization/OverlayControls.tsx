@@ -5,6 +5,8 @@ interface OverlayControlsProps {
   onViewModeChange: (mode: 'original' | 'mask' | 'overlay') => void;
   overlayAlpha: number;
   onAlphaChange: (alpha: number) => void;
+  show3DButton?: boolean;
+  on3DClick?: () => void;
 }
 
 function OverlayControls({
@@ -12,6 +14,8 @@ function OverlayControls({
   onViewModeChange,
   overlayAlpha,
   onAlphaChange,
+  show3DButton,
+  on3DClick,
 }: OverlayControlsProps) {
   return (
     <div className="overlay-controls">
@@ -52,6 +56,12 @@ function OverlayControls({
             onChange={(e) => onAlphaChange(Number(e.target.value))}
           />
         </div>
+      )}
+
+      {show3DButton && on3DClick && (
+        <button className="view3d-button" onClick={on3DClick}>
+          3D View
+        </button>
       )}
     </div>
   );
