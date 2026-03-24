@@ -33,7 +33,7 @@ function Viewer3D({ sessionId, onClose }: Viewer3DProps) {
         // Initialize all classes as visible
         const vis: Record<number, boolean> = {};
         data.classes.forEach((cls) => {
-          vis[cls.class_id] = true;
+          vis[cls.class_id] = cls.class_id !== 6; // Hide Orbital Fat by default
         });
         setVisibility(vis);
       } catch (err) {
